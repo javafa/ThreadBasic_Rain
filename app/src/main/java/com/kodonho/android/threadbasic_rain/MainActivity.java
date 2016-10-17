@@ -85,26 +85,27 @@ public class MainActivity extends AppCompatActivity {
 
     // 뷰
     class CustomView extends View {
+        // 동기화로 초기화
         List<RainDrop> rainDrops = Collections.synchronizedList(new ArrayList<RainDrop>());
-        Paint paint = new Paint();
+        // thread safe collection
+        //List<RainDrop> rainDrops = new CopyOnWriteArrayList<RainDrop>();
 
+        Paint paint = new Paint();
         public CustomView(Context context) {
             super(context);
             paint.setColor(Color.BLUE);
         }
-
         public void add(RainDrop rd){
             rainDrops.add(rd);
         }
-
         public void remove(RainDrop rd){
             rainDrops.remove(rd);
         }
-
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             // 컬렉션 clone 함수 = Collections.synchronizedList(targetCollection);
+            // 동기화
             synchronized (rainDrops) {
                 for (RainDrop rainDrop : rainDrops) {
                     canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
