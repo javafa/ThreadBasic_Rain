@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,9 +70,11 @@ public class MainActivity extends AppCompatActivity {
             // 화면을 그리는 Thread 생성 후 동작
             CallDraw cd = new CallDraw(cv,10);
             new Thread(cd).start();
+
             while(running) {
                 // 빗방울 Thread 생성 후 동작
                 RainDrop rainDrop = new RainDrop(cv);
+
                 new Thread(rainDrop).start();
 
                 // 0.5초에 1번씩 비를 생성한다
@@ -100,13 +104,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            try {
-                for (RainDrop rainDrop : rainDrops) {
-                    // 하나씩 꺼내서 circle을 그려준다
-                    canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
-                }
-            }catch(Exception e){
-                e.printStackTrace();
+            List<RainDrop> syncRainDrops = Collections.synchronizedList(rainDrops);
+            for (RainDrop rainDrop : syncRainDrops) {
+                // 하나씩 꺼내서 circle을 그려준다
+                canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
             }
         }
     }
