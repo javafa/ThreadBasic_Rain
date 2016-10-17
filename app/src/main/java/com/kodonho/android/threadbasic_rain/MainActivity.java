@@ -11,10 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
     // 뷰
     class CustomView extends View {
-        // 동기화로 초기화
-        List<RainDrop> rainDrops = Collections.synchronizedList(new ArrayList<RainDrop>());
+        // 동기화로 초기화 >> 사용할 때 synchronized 블럭으로 감싸야 한다
+        // List<RainDrop> rainDrops = Collections.synchronizedList(new ArrayList<RainDrop>());
         // thread safe collection
-        //List<RainDrop> rainDrops = new CopyOnWriteArrayList<RainDrop>();
+        List<RainDrop> rainDrops = new CopyOnWriteArrayList<RainDrop>();
 
         Paint paint = new Paint();
         public CustomView(Context context) {
@@ -106,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
             super.onDraw(canvas);
             // 컬렉션 clone 함수 = Collections.synchronizedList(targetCollection);
             // 동기화
-            synchronized (rainDrops) {
-                for (RainDrop rainDrop : rainDrops) {
-                    canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
-                }
+            //synchronized (rainDrops) {
+            for (RainDrop rainDrop : rainDrops) {
+                canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
             }
+            //}
         }
     }
 
