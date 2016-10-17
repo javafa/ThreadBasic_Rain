@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     Button btnStart;
     Button btnStop;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +72,7 @@ public class MainActivity extends AppCompatActivity {
             while(running) {
                 // 빗방울 Thread 생성 후 동작
                 RainDrop rainDrop = new RainDrop(cv);
-
                 new Thread(rainDrop).start();
-
                 // 0.5초에 1번씩 비를 생성한다
                 try{ Thread.sleep(50);}catch(Exception e){e.printStackTrace();}
             }
