@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 뷰
     class CustomView extends View {
-        ArrayList<RainDrop> rainDrops = new ArrayList<>();
+        List<RainDrop> rainDrops = Collections.synchronizedList(new ArrayList<RainDrop>());
         Paint paint = new Paint();
 
         public CustomView(Context context) {
@@ -104,10 +104,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            List<RainDrop> syncRainDrops = Collections.synchronizedList(rainDrops);
-            for (RainDrop rainDrop : syncRainDrops) {
-                // 하나씩 꺼내서 circle을 그려준다
-                canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
+            // 컬렉션 clone 함수 = Collections.synchronizedList(targetCollection);
+            synchronized (rainDrops) {
+                for (RainDrop rainDrop : rainDrops) {
+                    canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
+                }
             }
         }
     }
