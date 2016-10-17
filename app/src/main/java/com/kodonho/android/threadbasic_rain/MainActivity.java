@@ -70,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
             new Thread(cd).start();
             while(running) {
                 // 빗방울 Thread 생성 후 동작
-                RainDrop rainDrop = new RainDrop();
-                cv.add(rainDrop);
+                RainDrop rainDrop = new RainDrop(cv);
                 new Thread(rainDrop).start();
 
                 // 0.5초에 1번씩 비를 생성한다
@@ -94,12 +93,20 @@ public class MainActivity extends AppCompatActivity {
             rainDrops.add(rd);
         }
 
+        public void remove(RainDrop rd){
+            rainDrops.remove(rd);
+        }
+
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            for(RainDrop rainDrop : rainDrops){
-                // 하나씩 꺼내서 circle을 그려준다
-                canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
+            try {
+                for (RainDrop rainDrop : rainDrops) {
+                    // 하나씩 꺼내서 circle을 그려준다
+                    canvas.drawCircle(rainDrop.x, rainDrop.y, rainDrop.size, paint);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
             }
         }
     }
@@ -112,8 +119,12 @@ public class MainActivity extends AppCompatActivity {
         int y;
         int size;
         int speed;
+        CustomView cv;
 
-        public RainDrop(){
+        public RainDrop(CustomView cv ){
+            this.cv = cv;
+            cv.add(this);
+
             Random random = new Random();
             x = random.nextInt(deviceWidth);
             y = 0; // 고정
@@ -137,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+            cv.remove(this);
         }
     }
 
